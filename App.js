@@ -4,6 +4,8 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from "./src/screens/HomeScreen";
 import ImageScreen from "./src/screens/ImageScreen";
+import CounterScreen from "./src/screens/CounterScreen";
+import ColorScreen from "./src/screens/ColorScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +21,14 @@ export default function App() {
         <Stack.Screen
          name="Images"
          component={ImageScreen} 
+        />
+        <Stack.Screen
+         name="Counter"
+         component={CounterScreen} 
+        />
+        <Stack.Screen
+         name="Colors"
+         component={ColorScreen} 
         />
       </Stack.Navigator>
     </NavigationContainer>
