@@ -1,59 +1,58 @@
-import React, { useState } from "react";
+import React, { useReducer } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import ColorCounter from "../components/ColorCounter";
 
 const COLOR_INCREMENT = 10;
 
-const SquareScreen = () => {
-  const [red, setRed] = useState(0);
-  const [green, setGreen] = useState(0);
-  const [blue, setBlue] = useState(0);
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "change_red":
+      return state.red + action.payload > 255 || state.red + action.payload < 0
+        ? state
+        : { ...state, red: state.red + action.payload };
+    case "change_green":
+      return state.green + action.payload > 255 ||
+        state.green + action.payload < 0
+        ? state
+        : { ...state, green: state.green + action.payload };
+    case "change_blue":
+      return state.blue + action.payload > 255 ||
+        state.blue + action.payload < 0
+        ? state
+        : { ...state, blue: state.blue + action.payload };
+  }
+};
 
-  const setColor = (color, change) => {
-    switch (color) {
-      case "red":
-        if (change === "add" && red + COLOR_INCREMENT < 255) {
-          setRed(red + COLOR_INCREMENT);
-        }
-        if (change === "remove" && red - COLOR_INCREMENT > 0) {
-          setRed(red - COLOR_INCREMENT);
-        }
-        return;
-      case "green":
-        if (change === "add" && green + COLOR_INCREMENT < 255) {
-          setGreen(green + COLOR_INCREMENT);
-        }
-        if (change === "remove" && green - COLOR_INCREMENT > 0) {
-          setGreen(green - COLOR_INCREMENT);
-        }
-        return;
-      case "blue":
-        if (change === "add" && blue + COLOR_INCREMENT < 255) {
-          setBlue(blue + COLOR_INCREMENT);
-        }
-        if (change === "remove" && blue - COLOR_INCREMENT > 0) {
-          setBlue(blue - COLOR_INCREMENT);
-        }
-        return;
-    }
-  };
+const SquareScreen = () => {
+  const [state, dispatch] = useReducer(reducer, { red: 0, green: 0, blue: 0 });
+  const { red, green, blue } = state;
 
   return (
     <View style={{ padding: 20 }}>
       <ColorCounter
-        onAdd={() => setColor("red", "add")}
-        onRemove={() => setColor("red", "remove")}
+        onAdd={() => dispatch({ type: "change_red", payload: COLOR_INCREMENT })}
+        onRemove={() =>
+          dispatch({ type: "change_red", payload: -1 * COLOR_INCREMENT })
+        }
         color="Red"
       />
       <ColorCounter
         color="Green"
-        onAdd={() => setColor("green", "add")}
-        onRemove={() => setColor("green", "remove")}
+        onAdd={() =>
+          dispatch({ type: "change_green", payload: COLOR_INCREMENT })
+        }
+        onRemove={() =>
+          dispatch({ type: "change_green", payload: -1 * COLOR_INCREMENT })
+        }
       />
       <ColorCounter
         color="Blue"
-        onAdd={() => setColor("blue", "add")}
-        onRemove={() => setColor("blue", "remove")}
+        onAdd={() =>
+          dispatch({ type: "change_blue", payload: COLOR_INCREMENT })
+        }
+        onRemove={() =>
+          dispatch({ type: "change_blue", payload: -1 * COLOR_INCREMENT })
+        }
       />
       <View
         style={{
